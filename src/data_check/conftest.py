@@ -17,7 +17,9 @@ def data(request):
 
     # Download input artifact. This will also note that this script is using this
     # particular version of the artifact
-    data_path = run.use_artifact(request.config.option.csv).file()
+    artifact = run.use_artifact(request.config.option.csv)
+    artifact_dir = artifact.download()
+    data_path = artifact_dir + "/clean_sample.csv"
 
     if data_path is None:
         pytest.fail("You must provide the --csv option on the command line")
@@ -33,7 +35,9 @@ def ref_data(request):
 
     # Download input artifact. This will also note that this script is using this
     # particular version of the artifact
-    data_path = run.use_artifact(request.config.option.ref).file()
+    artifact_ref = run.use_artifact(request.config.option.ref)
+    artifact_ref_dir = artifact_ref.download()
+    data_path = artifact_ref_dir + "/clean_sample.csv"
 
     if data_path is None:
         pytest.fail("You must provide the --ref option on the command line")
