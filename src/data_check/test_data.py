@@ -91,7 +91,7 @@ def test_row_count(data: pd.DataFrame):
     """
     tests that the dataset has a good amount of rows
     """
-    assert len(data) > 0
+    assert 15000 < data.shape[0] < 100000
 
 def test_price_range(data: pd.DataFrame):
     """

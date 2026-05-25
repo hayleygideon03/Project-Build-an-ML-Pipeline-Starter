@@ -22,7 +22,9 @@ def go(args):
     # Download input artifact. This will also note that this script is using this
     # particular version of the artifact
     logger.info(f"Fetching artifact {args.input}")
-    artifact_local_path = run.use_artifact(args.input).file()
+    artifact = run.use_artifact(args.input)
+    artifact_dir = artifact.download()
+    artifact_local_path = artifact_dir + "/clean_sample.csv"
 
     df = pd.read_csv(artifact_local_path)
 
@@ -37,17 +39,18 @@ def go(args):
     # Save to output files
     for df, k in zip([trainval, test], ['trainval', 'test']):
         logger.info(f"Uploading {k}_data.csv dataset")
-        with tempfile.NamedTemporaryFile("w") as fp:
+        
+        temp_path = f"{k}_data.csv"
 
-            df.to_csv(fp.name, index=False)
+        df.to_csv(temp_path, index=False)
 
-            log_artifact(
-                f"{k}_data.csv",
-                f"{k}_data",
-                f"{k} split of dataset",
-                fp.name,
-                run,
-            )
+        log_artifact(
+            f"{k}_data.csv",
+            f"{k}_data",
+            f"{k} split of dataset",
+            temp_path,
+            run,
+        )
 
 
 if __name__ == "__main__":
