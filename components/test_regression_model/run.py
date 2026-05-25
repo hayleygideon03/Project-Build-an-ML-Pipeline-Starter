@@ -27,7 +27,9 @@ def go(args):
     model_local_path = run.use_artifact(args.mlflow_model).download()
 
     # Download test dataset
-    test_dataset_path = run.use_artifact(args.test_dataset).file()
+    artifact = run.use_artifact(args.test_dataset)
+    artifact_dir = artifact.download()
+    test_dataset_path = artifact_dir + "/test_data.csv"
 
     # Read test dataset
     X_test = pd.read_csv(test_dataset_path)
